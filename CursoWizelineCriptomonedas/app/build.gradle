@@ -57,4 +57,8 @@ dependencies {
     //Libreria para imagenes con Jetpack Compose
     implementation "io.coil-kt:coil:2.2.1"
     implementation "io.coil-kt:coil-compose:2.2.1"
+    //RXJava
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0'
 }

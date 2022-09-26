@@ -36,12 +36,9 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
         }
 
         binding.cryptoBook.text = crypto.book
-        binding.minimumPrice.text = crypto.minimum_price
-        binding.maximumPrice.text = crypto.maximum_price
-        binding.ticketSize.text = crypto.tick_size
         binding.minimumValue.text = crypto.minimum_value
         binding.maximumValue.text = crypto.maximum_value
-        binding.cryptoImage.load("https://firebasestorage.googleapis.com/v0/b/crypto-d6420.appspot.com/o/cryptocurrency_icon%2Fic_crypto_eth.png?alt=media"){
+        binding.cryptoImage.load(cryptoImage(crypto.book)) {
             crossfade(true)
             transformations(CircleCropTransformation())
         }
@@ -73,9 +70,18 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
                 is ApiResponseStatus.Success -> loadingWheel.visibility = View.GONE
             }
         }
+        cryptoOrderListViewModel.bookDetail.observe(this){
+            cryptoBookDetail->
+            binding.minimumPrice.text = cryptoBookDetail.payload.low
+            binding.maximumPrice.text = cryptoBookDetail.payload.high
+            binding.lastPrice.text = cryptoBookDetail.payload.last
+        }
     }
 
-    fun cryptoOrderList(crypto: String) {
+    private fun cryptoOrderList(crypto: String) =
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
-    }
+
+
+    private fun cryptoImage(crypto: String): String =
+        cryptoOrderListViewModel.downloadCryptoImage(crypto)
 }

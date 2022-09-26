@@ -2,6 +2,10 @@ package com.vero.cursowizelinecriptomonedas.api
 
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoListApiResponse
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoOrderListApiResponse
+import com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import io.reactivex.rxjava3.core.Single
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -10,6 +14,7 @@ import retrofit2.http.Query
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .build()
 
 interface ApiService {
@@ -18,6 +23,9 @@ interface ApiService {
 
     @GET(ORDER_BOOK)
     suspend fun getOrderCrypto(@Query("book") book: String): CryptoOrderListApiResponse
+
+    @GET(DETAIL_BOOK)
+    fun getDeatilCrypto(@Query("book") book: String): Single<Response<CryptoBookDetail>>
 }
 
 //Use Service
