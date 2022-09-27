@@ -4,11 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vero.cursowizelinecriptomonedas.model.Crypto
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
+import com.vero.cursowizelinecriptomonedas.model.Crypto
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CryptoListViewModel : ViewModel() {
+@HiltViewModel
+class CryptoListViewModel @Inject constructor(
+    private val cryptoRepository: CryptoRepository
+): ViewModel() {
     //LIVEDATA
     //CryptoList
     private val _cryptoList = MutableLiveData<List<Crypto>>()
@@ -19,8 +24,6 @@ class CryptoListViewModel : ViewModel() {
     private val _status = MutableLiveData<ApiResponseStatus<List<Crypto>>>()
     val status: LiveData<ApiResponseStatus<List<Crypto>>>
         get() = _status
-
-    private val cryptoRepository = CryptoRepository()
 
     init {
         downloadCrypto()
