@@ -31,10 +31,6 @@ class CryptoOrderListViewModel : ViewModel() {
     private val cryptoOrderRepository = CryptoOrderRepository()
     private val cryptoBookRepository = CryptoBookRepository()
 
-    init {
-        downloadCryptoBookDetail()
-    }
-
     fun downloadCryptoOrder(crypto: String) {
         viewModelScope.launch {
             _status.value = ApiResponseStatus.Loading()
@@ -54,8 +50,8 @@ class CryptoOrderListViewModel : ViewModel() {
             crypto.split("_").get(0)
         }.png?alt=media"
 
-    private fun downloadCryptoBookDetail() {
-        cryptoBookRepository.getDetailBook()
+    fun downloadCryptoBookDetail(crypto: String) {
+        cryptoBookRepository.getDetailBook(crypto)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { onSuccess, onError ->

@@ -47,7 +47,7 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        cryptoOrderList(crypto.book)
+        cryptoInit(crypto.book)
 
         /***Recycler***/
         val loadingWheel = binding.loadingWheel
@@ -70,16 +70,17 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
                 is ApiResponseStatus.Success -> loadingWheel.visibility = View.GONE
             }
         }
-        cryptoOrderListViewModel.bookDetail.observe(this){
-            cryptoBookDetail->
+        cryptoOrderListViewModel.bookDetail.observe(this) { cryptoBookDetail ->
             binding.minimumPrice.text = cryptoBookDetail.payload.low
             binding.maximumPrice.text = cryptoBookDetail.payload.high
             binding.lastPrice.text = cryptoBookDetail.payload.last
         }
     }
 
-    private fun cryptoOrderList(crypto: String) =
+    private fun cryptoInit(crypto: String) {
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
+        cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
+    }
 
 
     private fun cryptoImage(crypto: String): String =
