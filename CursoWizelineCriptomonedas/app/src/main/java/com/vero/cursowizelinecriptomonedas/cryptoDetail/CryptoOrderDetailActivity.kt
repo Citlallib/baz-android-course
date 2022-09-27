@@ -13,7 +13,9 @@ import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.databinding.ActivityCryptoDetailBinding
 import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CryptoOrderDetailActivity : AppCompatActivity() {
     companion object {
         //Key

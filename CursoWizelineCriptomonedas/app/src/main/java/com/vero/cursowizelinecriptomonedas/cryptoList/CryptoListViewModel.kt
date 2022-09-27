@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CryptoListViewModel @Inject constructor(
     private val cryptoRepository: CryptoRepository
-): ViewModel() {
+) : ViewModel() {
     //LIVEDATA
     //CryptoList
     private val _cryptoList = MutableLiveData<List<Crypto>>()
