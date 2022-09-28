@@ -13,7 +13,9 @@ import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.databinding.ActivityCryptoDetailBinding
 import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CryptoOrderDetailActivity : AppCompatActivity() {
     companion object {
         //Key
@@ -36,12 +38,9 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
         }
 
         binding.cryptoBook.text = crypto.book
-        binding.minimumPrice.text = crypto.minimum_price
-        binding.maximumPrice.text = crypto.maximum_price
-        binding.ticketSize.text = crypto.tick_size
         binding.minimumValue.text = crypto.minimum_value
         binding.maximumValue.text = crypto.maximum_value
-        binding.cryptoImage.load("https://firebasestorage.googleapis.com/v0/b/crypto-d6420.appspot.com/o/cryptocurrency_icon%2Fic_crypto_eth.png?alt=media"){
+        binding.cryptoImage.load(cryptoImage(crypto.book)) {
             crossfade(true)
             transformations(CircleCropTransformation())
         }
@@ -50,7 +49,7 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        cryptoOrderList(crypto.book)
+        cryptoInit(crypto.book)
 
         /***Recycler***/
         val loadingWheel = binding.loadingWheel
@@ -73,9 +72,19 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
                 is ApiResponseStatus.Success -> loadingWheel.visibility = View.GONE
             }
         }
+        cryptoOrderListViewModel.bookDetail.observe(this) { cryptoBookDetail ->
+            binding.minimumPrice.text = cryptoBookDetail.payload.low
+            binding.maximumPrice.text = cryptoBookDetail.payload.high
+            binding.lastPrice.text = cryptoBookDetail.payload.last
+        }
     }
 
-    fun cryptoOrderList(crypto: String) {
+    private fun cryptoInit(crypto: String) {
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
+        cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
     }
+
+
+    private fun cryptoImage(crypto: String): String =
+        cryptoOrderListViewModel.downloadCryptoImage(crypto)
 }

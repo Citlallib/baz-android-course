@@ -11,7 +11,9 @@ import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.cryptoDetail.CryptoOrderDetailActivity
 import com.vero.cursowizelinecriptomonedas.cryptoDetail.CryptoOrderDetailActivity.Companion.CRYPTO_KEY
 import com.vero.cursowizelinecriptomonedas.databinding.ActivityCryptoListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CryptoListActivity : AppCompatActivity() {
     //Instance del ViewModel
     private val cryptoListViewModel: CryptoListViewModel by viewModels()
