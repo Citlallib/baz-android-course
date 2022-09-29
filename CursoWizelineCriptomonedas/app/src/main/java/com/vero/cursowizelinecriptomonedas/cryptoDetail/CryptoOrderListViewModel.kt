@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
+import com.vero.cursowizelinecriptomonedas.domain.GetCryptoDetailUseCase
 import com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail
 import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CryptoOrderListViewModel @Inject constructor(
-    private val cryptoOrderRepository: CryptoOrderRepository
+    private val getCryptoDetailUseCase: GetCryptoDetailUseCase
 ) : ViewModel() {
     private val _cryptoOrderList = MutableLiveData<List<CryptoOrder>>()
 
@@ -36,7 +37,7 @@ class CryptoOrderListViewModel @Inject constructor(
     fun downloadCryptoOrder(crypto: String) {
         viewModelScope.launch {
             _status.value = ApiResponseStatus.Loading()
-            handleResponseStatus(cryptoOrderRepository.downloadCryptoOrder(crypto))
+            handleResponseStatus(getCryptoDetailUseCase.invoke(crypto))
         }
     }
 
@@ -47,11 +48,11 @@ class CryptoOrderListViewModel @Inject constructor(
         _status.value = apiResponseStatus
     }
 
-    fun downloadCryptoImage(crypto: String): String = cryptoOrderRepository.getCryptoImg(crypto)
+    fun downloadCryptoImage(crypto: String): String = getCryptoDetailUseCase.getCryptoImg(crypto)
 
 
     fun downloadCryptoBookDetail(crypto: String) {
-        cryptoOrderRepository.getDetailBook(crypto)
+        getCryptoDetailUseCase.getDetailBook(crypto)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { onSuccess, onError ->
