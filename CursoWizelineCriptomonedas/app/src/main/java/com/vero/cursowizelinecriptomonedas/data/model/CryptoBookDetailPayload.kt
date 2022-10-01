@@ -1,4 +1,4 @@
-package com.vero.cursowizelinecriptomonedas.model
+package com.vero.cursowizelinecriptomonedas.data.model
 
 data class CryptoBookDetailPayload(
     val ask: String,

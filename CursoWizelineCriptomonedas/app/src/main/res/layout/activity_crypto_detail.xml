@@ -7,11 +7,11 @@
 
         <variable
             name="crypto"
-            type="com.vero.cursowizelinecriptomonedas.model.Crypto" />
+            type="com.vero.cursowizelinecriptomonedas.data.model.Crypto" />
 
         <variable
             name="cryptoBook"
-            type="com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail" />
+            type="com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -2,7 +2,7 @@ package com.vero.cursowizelinecriptomonedas.api
 
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoListApiResponse
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoOrderListApiResponse
-import com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Single
 import okhttp3.OkHttpClient
@@ -38,7 +38,7 @@ interface ApiService {
     suspend fun getOrderCrypto(@Query("book") book: String): CryptoOrderListApiResponse
 
     @GET(DETAIL_BOOK)
-    fun getDeatilCrypto(@Query("book") book: String): Single<Response<CryptoBookDetail>>
+    suspend fun getDeatilCrypto(@Query("book") book: String): CryptoBookDetail?
 }
 
 //Use Service

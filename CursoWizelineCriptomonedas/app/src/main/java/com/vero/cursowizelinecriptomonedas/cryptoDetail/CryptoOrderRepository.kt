@@ -1,33 +1,70 @@
 package com.vero.cursowizelinecriptomonedas.cryptoDetail
 
-import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.api.CryptoApi.retrofitService
 import com.vero.cursowizelinecriptomonedas.api.dto.CryptoOrderDTOMapper
-import com.vero.cursowizelinecriptomonedas.api.makeNetworkCall
-import com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail
-import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
-import io.reactivex.rxjava3.core.Single
-import retrofit2.Response
+import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoBookDetailDaoMapper
+import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoBookDetailDao
+import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoOrderDao
+import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoBookDetailEntity
+import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoOrderEntity
+import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoOrderDaoMapper
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetailPayload
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
 import javax.inject.Inject
 
-class CryptoOrderRepository @Inject constructor() {
-    //TODO : ApiResponseStatus
-    suspend fun downloadCryptoOrder(crypto: String): ApiResponseStatus<List<CryptoOrder>> {
-        return makeNetworkCall {
-            val cryptoOrderListApiResponde = retrofitService.getOrderCrypto(crypto)
-            val cryptoOrderDTOList = cryptoOrderListApiResponde.payload.asks
-            val cryptoOrderDTOMapper = CryptoOrderDTOMapper()
-            cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(cryptoOrderDTOList)
-        }
+class CryptoOrderRepository @Inject constructor(
+    private val cryptoBookDetailDao: CryptoBookDetailDao,
+    private val cryptoOrderDao: CryptoOrderDao
+) {
+    /* Crypto Order List*/
+    suspend fun getCryptoOrderFromApi(crypto: String): List<CryptoOrder> {
+        val cryptoOrderApiResponse = retrofitService.getOrderCrypto(crypto)
+        val cryptoOrderDTOList = cryptoOrderApiResponse.payload.asks
+        val cryptoOrderDTOMapper = CryptoOrderDTOMapper()
+        return cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(cryptoOrderDTOList)
     }
 
-    fun getDetailBook(crypto: String): Single<Response<CryptoBookDetail>> {
+    suspend fun getCryptoOrderFromDataBase(crypto: String): List<CryptoOrder> {
+        val cryptoListBDResponse = cryptoOrderDao.getCryptoOrder(crypto)
+        val cryptoOrderDaoMapper = CryptoOrderDaoMapper()
+        return cryptoOrderDaoMapper.fromCryptoOrderListToCryptoOrderList(
+            cryptoListBDResponse
+        )
+    }
+
+    suspend fun insertCryptoOrder(cryptoOrderList: List<CryptoOrderEntity>) {
+        cryptoOrderDao.insertCryptoOrder(cryptoOrderList)
+    }
+
+    suspend fun clearCryptoOrder() {
+        cryptoOrderDao.deleteCryptoOrder()
+    }
+
+    /* Crypto Book Detail */
+    suspend fun getCryptoBookDetailFromApi(crypto: String): CryptoBookDetail? {
         return retrofitService.getDeatilCrypto(crypto)
     }
 
+    suspend fun getCryptoBookDetailFromDataBase(crypto: String): CryptoBookDetailPayload? {
+        val cryptoBookDetailResponse: CryptoBookDetailEntity? = cryptoBookDetailDao.getCryptoOrderByBook(crypto)
+        val cryptoBookDetailMapper = CryptoBookDetailDaoMapper()
+        return cryptoBookDetailResponse?.let {
+            cryptoBookDetailMapper.fromCryptoOrderEntityToDetail(it)
+        }
+    }
+
+    suspend fun insertCryptoBookDetail(crypto: CryptoBookDetailEntity){
+        cryptoBookDetailDao.insert(crypto)
+    }
+
+    suspend fun clearCryptoBookDetail(){
+        cryptoBookDetailDao.delete()
+    }
+
+    /* Crypto Image */
     fun getCryptoImg(crypto: String): String =
         "https://firebasestorage.googleapis.com/v0/b/crypto-d6420.appspot.com/o/cryptocurrency_icon%2Fic_crypto_${
             crypto.split("_").get(0)
         }.png?alt=media"
-
 }

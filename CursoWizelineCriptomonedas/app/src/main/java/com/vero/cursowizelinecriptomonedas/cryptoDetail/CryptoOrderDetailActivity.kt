@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.vero.cursowizelinecriptomonedas.model.Crypto
+import com.vero.cursowizelinecriptomonedas.data.model.Crypto
 import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.databinding.ActivityCryptoDetailBinding
-import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -73,9 +73,9 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
             }
         }
         cryptoOrderListViewModel.bookDetail.observe(this) { cryptoBookDetail ->
-            binding.minimumPrice.text = cryptoBookDetail.payload.low
-            binding.maximumPrice.text = cryptoBookDetail.payload.high
-            binding.lastPrice.text = cryptoBookDetail.payload.last
+            binding.minimumPrice.text = cryptoBookDetail.low
+            binding.maximumPrice.text = cryptoBookDetail.high
+            binding.lastPrice.text = cryptoBookDetail.last
         }
     }
 

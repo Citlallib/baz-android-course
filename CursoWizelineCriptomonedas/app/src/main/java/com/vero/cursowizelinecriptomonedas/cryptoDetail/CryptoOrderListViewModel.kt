@@ -5,21 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetailPayload
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
+import com.vero.cursowizelinecriptomonedas.domain.GetCryptoBookDetailUseCase
 import com.vero.cursowizelinecriptomonedas.domain.GetCryptoDetailUseCase
-import com.vero.cursowizelinecriptomonedas.model.CryptoBookDetail
-import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
+import com.vero.cursowizelinecriptomonedas.domain.GetCryptoImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CryptoOrderListViewModel @Inject constructor(
-    private val getCryptoDetailUseCase: GetCryptoDetailUseCase
+    private val getCryptoDetailUseCase: GetCryptoDetailUseCase,
+    private val getCryptoBookDetailUseCase: GetCryptoBookDetailUseCase,
+    private val getCryptoImageUseCase: GetCryptoImageUseCase
 ) : ViewModel() {
     private val _cryptoOrderList = MutableLiveData<List<CryptoOrder>>()
-
     val cryptoOrderList: LiveData<List<CryptoOrder>>
         get() = _cryptoOrderList
 
@@ -29,44 +30,25 @@ class CryptoOrderListViewModel @Inject constructor(
         get() = _status
 
     //BookDetail
-    private val _bookDetail = MutableLiveData<CryptoBookDetail>()
-    val bookDetail: LiveData<CryptoBookDetail>
+    private val _bookDetail = MutableLiveData<CryptoBookDetailPayload>()
+    val bookDetail: LiveData<CryptoBookDetailPayload>
         get() = _bookDetail
 
 
     fun downloadCryptoOrder(crypto: String) {
         viewModelScope.launch {
-            _status.value = ApiResponseStatus.Loading()
-            handleResponseStatus(getCryptoDetailUseCase.invoke(crypto))
+            //_status.value = ApiResponseStatus.Loading()
+            _cryptoOrderList.value = getCryptoDetailUseCase.invoke(crypto)
         }
     }
 
-    private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<List<CryptoOrder>>) {
-        if (apiResponseStatus is ApiResponseStatus.Success) {
-            _cryptoOrderList.value = apiResponseStatus.payload
-        }
-        _status.value = apiResponseStatus
-    }
-
-    fun downloadCryptoImage(crypto: String): String = getCryptoDetailUseCase.getCryptoImg(crypto)
+    fun downloadCryptoImage(crypto: String): String = getCryptoImageUseCase.getCryptoImg(crypto)
 
 
     fun downloadCryptoBookDetail(crypto: String) {
-        getCryptoDetailUseCase.getDetailBook(crypto)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { onSuccess, onError ->
-                onSuccess.let { response ->
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            _bookDetail.value = it
-                        }
-                    }
-                }
-                onError.let {
-
-                }
-            }
+        viewModelScope.launch {
+            _bookDetail.value = getCryptoBookDetailUseCase.invoke(crypto)
+        }
     }
 
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.domain.GetCryptoListUseCase
-import com.vero.cursowizelinecriptomonedas.model.Crypto
+import com.vero.cursowizelinecriptomonedas.data.model.Crypto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,15 +33,9 @@ class CryptoListViewModel @Inject constructor(
     private fun downloadCrypto() {
         //Coroutine
         viewModelScope.launch {
-            _status.value = ApiResponseStatus.Loading()
-            handleResponseStatus(getCryptoListUseCase.invoke())
+            //_status.value = ApiResponseStatus.Loading()
+            _cryptoList.value = getCryptoListUseCase.invoke()
+            //handleResponseStatus(getCryptoListUseCase.invoke())
         }
-    }
-
-    private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<List<Crypto>>) {
-        if (apiResponseStatus is ApiResponseStatus.Success) {
-            _cryptoList.value = apiResponseStatus.payload
-        }
-        _status.value = apiResponseStatus
     }
 }

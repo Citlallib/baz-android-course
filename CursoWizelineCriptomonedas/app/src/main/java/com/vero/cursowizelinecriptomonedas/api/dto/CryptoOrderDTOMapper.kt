@@ -1,6 +1,6 @@
 package com.vero.cursowizelinecriptomonedas.api.dto
 
-import com.vero.cursowizelinecriptomonedas.model.CryptoOrder
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
 
 class CryptoOrderDTOMapper {
     private fun fromCryptoOrderDTOToCryptoOrderDomain(cryptoOrderDTO: CryptoOrderDTO): CryptoOrder {

@@ -1,4 +1,4 @@
-package com.vero.cursowizelinecriptomonedas.model
+package com.vero.cursowizelinecriptomonedas.data.model
 
 class CryptoOrder (
     val book:   String,

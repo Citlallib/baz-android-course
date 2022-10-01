@@ -1,10 +1,29 @@
 package com.vero.cursowizelinecriptomonedas.domain
 
+import android.util.Log
 import com.vero.cursowizelinecriptomonedas.cryptoList.CryptoRepository
+import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoDaoMapper
+import com.vero.cursowizelinecriptomonedas.data.model.Crypto
 import javax.inject.Inject
 
 class GetCryptoListUseCase @Inject constructor(
     private val repository: CryptoRepository
 ) {
-    suspend operator fun invoke() = repository.downloadCrypto()
+    suspend operator fun invoke(): List<Crypto> {
+        val cryptos = repository.downloadCrypto()
+        return if (cryptos.isNotEmpty()) {
+            Log.i("okhttp", "Entra por Api")
+            repository.clearCrypto()
+            val cryptosMap = CryptoDaoMapper().fromCryptoDomainListToCryptoEntityList(
+                cryptos
+            )
+            repository.insertCrypto(
+                cryptosMap
+            )
+            return cryptos
+        } else {
+            Log.i("okhttp", "Entra por DB")
+            repository.downloadCryptoFromDataBase()
+        }
+    }
 }
