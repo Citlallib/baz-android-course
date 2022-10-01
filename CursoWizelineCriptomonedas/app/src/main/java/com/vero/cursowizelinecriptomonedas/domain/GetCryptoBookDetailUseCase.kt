@@ -1,8 +1,10 @@
 package com.vero.cursowizelinecriptomonedas.domain
 
 import android.util.Log
+import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.cryptoDetail.CryptoOrderRepository
 import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoBookDetailDaoMapper
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetailPayload
 import javax.inject.Inject
 

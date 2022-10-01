@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -40,10 +41,10 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
         binding.cryptoBook.text = crypto.book
         binding.minimumValue.text = crypto.minimum_value
         binding.maximumValue.text = crypto.maximum_value
-        binding.cryptoImage.load(cryptoImage(crypto.book)) {
+        /*binding.cryptoImage.load(cryptoImage(crypto.book)) {
             crossfade(true)
             transformations(CircleCropTransformation())
-        }
+        }*/
         binding.crypto = crypto
         binding.closeButton.setOnClickListener {
             finish()
@@ -66,7 +67,7 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
             when (status) {
                 is ApiResponseStatus.Error -> {
                     loadingWheel.visibility = View.GONE
-                    Toast.makeText(this, status.messageId, Toast.LENGTH_SHORT).show()
+                    showErrorDialog(status.messageId)
                 }
                 is ApiResponseStatus.Loading -> loadingWheel.visibility = View.VISIBLE
                 is ApiResponseStatus.Success -> loadingWheel.visibility = View.GONE
@@ -81,10 +82,19 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
 
     private fun cryptoInit(crypto: String) {
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
-        cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
+        //cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
     }
 
+   // private fun cryptoImage(crypto: String): String = cryptoOrderListViewModel.downloadCryptoImage(crypto)
 
-    private fun cryptoImage(crypto: String): String =
-        cryptoOrderListViewModel.downloadCryptoImage(crypto)
+    private fun showErrorDialog(message: Int){
+        AlertDialog.Builder(this)
+            .setTitle(R.string.error_unknown)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok){_,_ ->
+                //Dismisss dialog
+            }
+            .create()
+            .show()
+    }
 }

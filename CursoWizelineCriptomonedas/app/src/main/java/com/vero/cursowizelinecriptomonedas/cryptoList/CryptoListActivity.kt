@@ -2,11 +2,14 @@ package com.vero.cursowizelinecriptomonedas.cryptoList
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.cryptoDetail.CryptoOrderDetailActivity
 import com.vero.cursowizelinecriptomonedas.cryptoDetail.CryptoOrderDetailActivity.Companion.CRYPTO_KEY
@@ -48,11 +51,22 @@ class CryptoListActivity : AppCompatActivity() {
             when (status) {
                 is ApiResponseStatus.Error -> {
                     loadingWheel.visibility = View.GONE
-                    Toast.makeText(this, status.messageId, Toast.LENGTH_SHORT).show()
+                    showErrorDialog(status.messageId)
                 }
                 is ApiResponseStatus.Loading -> loadingWheel.visibility = View.VISIBLE
                 is ApiResponseStatus.Success -> loadingWheel.visibility = View.GONE
             }
         }
+    }
+
+    private fun showErrorDialog(message: Int){
+        AlertDialog.Builder(this)
+            .setTitle(R.string.error_unknown)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok){_,_ ->
+                //Dismisss dialog
+            }
+            .create()
+            .show()
     }
 }

@@ -1,7 +1,9 @@
 package com.vero.cursowizelinecriptomonedas.cryptoDetail
 
+import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.api.CryptoApi.retrofitService
 import com.vero.cursowizelinecriptomonedas.api.dto.CryptoOrderDTOMapper
+import com.vero.cursowizelinecriptomonedas.api.makeNetworkCall
 import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoBookDetailDaoMapper
 import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoBookDetailDao
 import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoOrderDao
@@ -18,19 +20,23 @@ class CryptoOrderRepository @Inject constructor(
     private val cryptoOrderDao: CryptoOrderDao
 ) {
     /* Crypto Order List*/
-    suspend fun getCryptoOrderFromApi(crypto: String): List<CryptoOrder> {
-        val cryptoOrderApiResponse = retrofitService.getOrderCrypto(crypto)
-        val cryptoOrderDTOList = cryptoOrderApiResponse.payload.asks
-        val cryptoOrderDTOMapper = CryptoOrderDTOMapper()
-        return cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(cryptoOrderDTOList)
+    suspend fun getCryptoOrderFromApi(crypto: String): ApiResponseStatus<List<CryptoOrder>> {
+        return makeNetworkCall {
+            val cryptoOrderApiResponse = retrofitService.getOrderCrypto(crypto)
+            val cryptoOrderDTOList = cryptoOrderApiResponse.payload.asks
+            val cryptoOrderDTOMapper = CryptoOrderDTOMapper()
+            cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(cryptoOrderDTOList)
+        }
     }
 
-    suspend fun getCryptoOrderFromDataBase(crypto: String): List<CryptoOrder> {
-        val cryptoListBDResponse = cryptoOrderDao.getCryptoOrder(crypto)
-        val cryptoOrderDaoMapper = CryptoOrderDaoMapper()
-        return cryptoOrderDaoMapper.fromCryptoOrderListToCryptoOrderList(
-            cryptoListBDResponse
-        )
+    suspend fun getCryptoOrderFromDataBase(crypto: String): ApiResponseStatus<List<CryptoOrder>> {
+        return makeNetworkCall {
+            val cryptoListBDResponse = cryptoOrderDao.getCryptoOrder(crypto)
+            val cryptoOrderDaoMapper = CryptoOrderDaoMapper()
+            cryptoOrderDaoMapper.fromCryptoOrderListToCryptoOrderList(
+                cryptoListBDResponse
+            )
+        }
     }
 
     suspend fun insertCryptoOrder(cryptoOrderList: List<CryptoOrderEntity>) {
