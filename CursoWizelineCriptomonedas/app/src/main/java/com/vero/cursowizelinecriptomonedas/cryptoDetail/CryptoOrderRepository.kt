@@ -4,20 +4,23 @@ import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.api.CryptoApi.retrofitService
 import com.vero.cursowizelinecriptomonedas.api.dto.CryptoOrderDTOMapper
 import com.vero.cursowizelinecriptomonedas.api.makeNetworkCall
-import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoBookDetailDaoMapper
 import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoBookDetailDao
+import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoImageDao
 import com.vero.cursowizelinecriptomonedas.data.database.dao.CryptoOrderDao
 import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoBookDetailEntity
+import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoImageEntity
 import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoOrderEntity
+import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoBookDetailDaoMapper
+import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoImageDaoMapper
 import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoOrderDaoMapper
-import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetailPayload
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
 import javax.inject.Inject
 
 class CryptoOrderRepository @Inject constructor(
     private val cryptoBookDetailDao: CryptoBookDetailDao,
-    private val cryptoOrderDao: CryptoOrderDao
+    private val cryptoOrderDao: CryptoOrderDao,
+    private val cryptoImageDao: CryptoImageDao
 ) {
     /* Crypto Order List*/
     suspend fun getCryptoOrderFromApi(crypto: String): ApiResponseStatus<List<CryptoOrder>?> {
@@ -77,8 +80,29 @@ class CryptoOrderRepository @Inject constructor(
     }
 
     /* Crypto Image */
-    fun getCryptoImg(crypto: String): String =
-        "https://firebasestorage.googleapis.com/v0/b/crypto-d6420.appspot.com/o/cryptocurrency_icon%2Fic_crypto_${
-            crypto.split("_").get(0)
-        }.png?alt=media"
+    suspend fun getCryptoImgFromApi(crypto: String): ApiResponseStatus<String?> {
+        return makeNetworkCall {
+            "https://firebasestorage.googleapis.com/v0/b/crypto-d6420.appspot.com/o/cryptocurrency_icon%2Fic_crypto_${
+                crypto.split("_").get(0)
+            }.png?alt=media"
+        }
+    }
+
+    suspend fun getCryptoImgFromDataBase(crypto: String): ApiResponseStatus<String?>{
+        return makeNetworkCall {
+            val cryptoImageResponse: CryptoImageEntity? = cryptoImageDao.getCryptoImage(crypto)
+            val cryptoImageMapper = CryptoImageDaoMapper()
+            cryptoImageResponse?.let {
+                cryptoImageMapper.fromCryptoImageEntityToDetail(it)
+            }
+        }
+    }
+
+    suspend fun insertCryptoImage(cryptoImageEntity: CryptoImageEntity?){
+        cryptoImageEntity?.let { cryptoImageDao.insertCryptoImage(it) }
+    }
+
+    suspend fun clearCryptoImage(crypto: String){
+        cryptoImageDao.deleteCryptoImage(crypto)
+    }
 }

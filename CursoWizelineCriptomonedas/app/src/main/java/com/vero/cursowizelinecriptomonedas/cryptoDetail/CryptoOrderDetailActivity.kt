@@ -41,10 +41,6 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
         binding.cryptoBook.text = crypto.book
         binding.minimumValue.text = crypto.minimum_value
         binding.maximumValue.text = crypto.maximum_value
-        /*binding.cryptoImage.load(cryptoImage(crypto.book)) {
-            crossfade(true)
-            transformations(CircleCropTransformation())
-        }*/
         binding.crypto = crypto
         binding.closeButton.setOnClickListener {
             finish()
@@ -78,14 +74,19 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
             binding.maximumPrice.text = cryptoBookDetail.high
             binding.lastPrice.text = cryptoBookDetail.last
         }
+        cryptoOrderListViewModel.bookImage.observe(this) {
+            binding.cryptoImage.load(it) {
+            crossfade(true)
+            transformations(CircleCropTransformation())
+            }
+        }
     }
 
     private fun cryptoInit(crypto: String) {
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
         cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
+        cryptoOrderListViewModel.downloadCryptoImage(crypto)
     }
-
-   // private fun cryptoImage(crypto: String): String = cryptoOrderListViewModel.downloadCryptoImage(crypto)
 
     private fun showErrorDialog(message: Int){
         AlertDialog.Builder(this)

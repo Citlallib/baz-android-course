@@ -39,6 +39,14 @@ class CryptoOrderListViewModel @Inject constructor(
     val statusBookDetail: LiveData<ApiResponseStatus<CryptoBookDetailPayload?>>
         get() = _statusBookDetail
 
+    private val _bookImage = MutableLiveData<String?>()
+    val bookImage: LiveData<String?>
+        get() = _bookImage
+
+    private val _statusBookImage = MutableLiveData<ApiResponseStatus<String?>>()
+    val statusBookImage: LiveData<ApiResponseStatus<String?>>
+        get() = _statusBookImage
+
     fun downloadCryptoOrder(crypto: String) {
         viewModelScope.launch {
             _status.value = ApiResponseStatus.Loading()
@@ -62,9 +70,6 @@ class CryptoOrderListViewModel @Inject constructor(
         _status.value = apiResponseStatus
     }
 
-    //fun downloadCryptoImage(crypto: String): String = getCryptoImageUseCase.getCryptoImg(crypto)
-
-
     fun downloadCryptoBookDetail(crypto: String) {
         viewModelScope.launch {
             _statusBookDetail.value = ApiResponseStatus.Loading()
@@ -86,4 +91,25 @@ class CryptoOrderListViewModel @Inject constructor(
         _statusBookDetail.value = apiResponseStatus
     }
 
+    fun downloadCryptoImage(crypto: String){
+        viewModelScope.launch {
+            _statusBookImage.value = ApiResponseStatus.Loading()
+            handleResponseStatusBookImage(getCryptoImageUseCase.invoke(crypto))
+        }
+    }
+
+    private fun handleResponseStatusBookImage(apiResponseStatus: ApiResponseStatus<String?>) {
+        if (apiResponseStatus is ApiResponseStatus.Success) {
+            Log.i("okhttp", "Es success")
+            if (apiResponseStatus.data != null){
+                Log.i("okhttp", "No esta vacias")
+                _bookImage.value = apiResponseStatus.data
+            }
+            else{
+                Log.i("okhttp", "Esta vacias")
+                _statusBookImage.value = ApiResponseStatus.Error(R.string.sorry_try_later)
+            }
+        }
+        _statusBookImage.value = apiResponseStatus
+    }
 }

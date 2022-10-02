@@ -32,5 +32,8 @@ object RoomModule {
     @Provides
     fun provideCryptoOrderRoom(db: CryptoDataBase) = db.getCryptoOrderDao()
 
+    @Singleton
+    @Provides
+    fun provideCryptoImageRoom(db: CryptoDataBase) = db.getCryptoImage()
 
 }
