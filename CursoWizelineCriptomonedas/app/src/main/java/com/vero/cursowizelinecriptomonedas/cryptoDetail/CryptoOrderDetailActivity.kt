@@ -82,7 +82,7 @@ class CryptoOrderDetailActivity : AppCompatActivity() {
 
     private fun cryptoInit(crypto: String) {
         cryptoOrderListViewModel.downloadCryptoOrder(crypto)
-        //cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
+        cryptoOrderListViewModel.downloadCryptoBookDetail(crypto)
     }
 
    // private fun cryptoImage(crypto: String): String = cryptoOrderListViewModel.downloadCryptoImage(crypto)

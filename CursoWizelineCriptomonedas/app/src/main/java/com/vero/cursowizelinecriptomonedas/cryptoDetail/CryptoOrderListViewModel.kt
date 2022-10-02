@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
-import com.vero.cursowizelinecriptomonedas.data.model.Crypto
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetailPayload
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrder
 import com.vero.cursowizelinecriptomonedas.domain.GetCryptoBookDetailUseCase
@@ -36,6 +35,10 @@ class CryptoOrderListViewModel @Inject constructor(
     val bookDetail: LiveData<CryptoBookDetailPayload>
         get() = _bookDetail
 
+    private val _statusBookDetail = MutableLiveData<ApiResponseStatus<CryptoBookDetailPayload?>>()
+    val statusBookDetail: LiveData<ApiResponseStatus<CryptoBookDetailPayload?>>
+        get() = _statusBookDetail
+
     fun downloadCryptoOrder(crypto: String) {
         viewModelScope.launch {
             _status.value = ApiResponseStatus.Loading()
@@ -61,11 +64,25 @@ class CryptoOrderListViewModel @Inject constructor(
     //fun downloadCryptoImage(crypto: String): String = getCryptoImageUseCase.getCryptoImg(crypto)
 
 
-    /*fun downloadCryptoBookDetail(crypto: String) {
+    fun downloadCryptoBookDetail(crypto: String) {
         viewModelScope.launch {
-            _status.value = ApiResponseStatus.Loading()
-            _bookDetail.value = getCryptoBookDetailUseCase.invoke(crypto)
+            _statusBookDetail.value = ApiResponseStatus.Loading()
+            handleResponseStatusBookDetail(getCryptoBookDetailUseCase.invoke(crypto))
         }
-    }*/
+    }
+    private fun handleResponseStatusBookDetail(apiResponseStatus: ApiResponseStatus<CryptoBookDetailPayload?>) {
+        if (apiResponseStatus is ApiResponseStatus.Success) {
+            Log.i("okhttp", "Es success")
+            if (apiResponseStatus.data != null){
+                Log.i("okhttp", "No esta vacias")
+                _bookDetail.value = apiResponseStatus.data
+            }
+            else{
+                Log.i("okhttp", "Esta vacias")
+                _statusBookDetail.value = ApiResponseStatus.Error(R.string.sorry_try_later)
+            }
+        }
+        _statusBookDetail.value = apiResponseStatus
+    }
 
 }

@@ -8,7 +8,7 @@ import com.vero.cursowizelinecriptomonedas.data.database.entities.CryptoEntity
 
 @Dao
 interface CryptoDao {
-    @Query("SELECT * FROM crypto_table ORDER BY minimum_price DESC")
+    @Query("SELECT * FROM crypto_table")
     suspend fun getAllCrypto(): List<CryptoEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -48,24 +48,28 @@ class CryptoOrderRepository @Inject constructor(
     }
 
     /* Crypto Book Detail */
-    suspend fun getCryptoBookDetailFromApi(crypto: String): CryptoBookDetail? {
-        return retrofitService.getDeatilCrypto(crypto)
-    }
-
-    suspend fun getCryptoBookDetailFromDataBase(crypto: String): CryptoBookDetailPayload? {
-        val cryptoBookDetailResponse: CryptoBookDetailEntity? = cryptoBookDetailDao.getCryptoOrderByBook(crypto)
-        val cryptoBookDetailMapper = CryptoBookDetailDaoMapper()
-        return cryptoBookDetailResponse?.let {
-            cryptoBookDetailMapper.fromCryptoOrderEntityToDetail(it)
+    suspend fun getCryptoBookDetailFromApi(crypto: String): ApiResponseStatus<CryptoBookDetailPayload?> {
+        return makeNetworkCall {
+            retrofitService.getDeatilCrypto(crypto)?.payload
         }
     }
 
-    suspend fun insertCryptoBookDetail(crypto: CryptoBookDetailEntity){
-        cryptoBookDetailDao.insert(crypto)
+    suspend fun getCryptoBookDetailFromDataBase(crypto: String): ApiResponseStatus<CryptoBookDetailPayload?> {
+        return makeNetworkCall {
+            val cryptoBookDetailResponse: CryptoBookDetailEntity? = cryptoBookDetailDao.getCryptoOrderByBook(crypto)
+            val cryptoBookDetailMapper = CryptoBookDetailDaoMapper()
+            cryptoBookDetailResponse?.let {
+                cryptoBookDetailMapper.fromCryptoOrderEntityToDetail(it)
+            }
+        }
     }
 
-    suspend fun clearCryptoBookDetail(){
-        cryptoBookDetailDao.delete()
+    suspend fun insertCryptoBookDetail(crypto: CryptoBookDetailEntity?){
+        crypto?.let { cryptoBookDetailDao.insert(it) }
+    }
+
+    suspend fun clearCryptoBookDetail(crypto: String){
+        cryptoBookDetailDao.delete(crypto)
     }
 
     /* Crypto Image */

@@ -11,15 +11,19 @@ import javax.inject.Inject
 class GetCryptoBookDetailUseCase @Inject constructor(
     private val cryptoOrderRepository: CryptoOrderRepository
 ) {
-    suspend operator fun invoke(crypto: String): CryptoBookDetailPayload? {
+    suspend operator fun invoke(crypto: String): ApiResponseStatus<CryptoBookDetailPayload?> {
          val cryptoOrderDetailPayload = cryptoOrderRepository.getCryptoBookDetailFromApi(crypto)
 
-        return if (cryptoOrderDetailPayload != null){
+        return if (cryptoOrderDetailPayload is ApiResponseStatus.Success){
             Log.i("okhttp", "Entra por Api")
-            cryptoOrderRepository.clearCryptoBookDetail()
-            val cryptoOrder = CryptoBookDetailDaoMapper().fromCryptoOrderDomainToEntity(cryptoOrderDetailPayload.payload)
+            cryptoOrderRepository.clearCryptoBookDetail(crypto)
+            val cryptoOrder = cryptoOrderDetailPayload.data?.let {
+                CryptoBookDetailDaoMapper().fromCryptoOrderDomainToEntity(
+                    it
+                )
+            }
             cryptoOrderRepository.insertCryptoBookDetail(cryptoOrder)
-            return cryptoOrderDetailPayload.payload
+            return cryptoOrderDetailPayload
         }else {
             Log.i("okhttp", "Entra por DB")
             cryptoOrderRepository.getCryptoBookDetailFromDataBase(crypto)
