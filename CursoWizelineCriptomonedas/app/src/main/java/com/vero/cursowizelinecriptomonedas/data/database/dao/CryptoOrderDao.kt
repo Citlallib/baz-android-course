@@ -11,9 +11,9 @@ interface CryptoOrderDao {
     @Query("SELECT * FROM crypto_order_table where book == :idBook")
     suspend fun getCryptoOrder(idBook: String): List<CryptoOrderEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertCryptoOrder(cryptos: List<CryptoOrderEntity>)
 
-    @Query("DELETE FROM crypto_order_table")
-    suspend fun deleteCryptoOrder()
+    @Query("DELETE FROM crypto_order_table where book == :idBook")
+    suspend fun deleteCryptoOrder(idBook: String)
 }

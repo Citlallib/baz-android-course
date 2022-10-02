@@ -27,8 +27,8 @@ class CryptoOrderListViewModel @Inject constructor(
     val cryptoOrderList: LiveData<List<CryptoOrder>>
         get() = _cryptoOrderList
 
-    private val _status = MutableLiveData<ApiResponseStatus<List<CryptoOrder>>>()
-    val status: LiveData<ApiResponseStatus<List<CryptoOrder>>>
+    private val _status = MutableLiveData<ApiResponseStatus<List<CryptoOrder>?>>()
+    val status: LiveData<ApiResponseStatus<List<CryptoOrder>?>>
         get() = _status
 
     private val _bookDetail = MutableLiveData<CryptoBookDetailPayload>()
@@ -46,11 +46,12 @@ class CryptoOrderListViewModel @Inject constructor(
         }
     }
 
-    private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<List<CryptoOrder>>) {
+    private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<List<CryptoOrder>?>) {
         if (apiResponseStatus is ApiResponseStatus.Success) {
             Log.i("okhttp", "Es success")
-            if (apiResponseStatus.data.isNotEmpty()){
+            if (apiResponseStatus.data?.isNotEmpty() == true){
                 Log.i("okhttp", "No esta vacias")
+                Log.i("okhttp", "${apiResponseStatus.data}")
                 _cryptoOrderList.value = apiResponseStatus.data
             }
             else{

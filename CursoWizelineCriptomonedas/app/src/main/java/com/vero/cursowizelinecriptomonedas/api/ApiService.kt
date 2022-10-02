@@ -35,7 +35,7 @@ interface ApiService {
     suspend fun getAllCrypto(): CryptoListApiResponse
 
     @GET(ORDER_BOOK)
-    suspend fun getOrderCrypto(@Query("book") book: String): CryptoOrderListApiResponse
+    suspend fun getOrderCrypto(@Query("book") book: String): CryptoOrderListApiResponse?
 
     @GET(DETAIL_BOOK)
     suspend fun getDeatilCrypto(@Query("book") book: String): CryptoBookDetail?

@@ -20,16 +20,20 @@ class CryptoOrderRepository @Inject constructor(
     private val cryptoOrderDao: CryptoOrderDao
 ) {
     /* Crypto Order List*/
-    suspend fun getCryptoOrderFromApi(crypto: String): ApiResponseStatus<List<CryptoOrder>> {
+    suspend fun getCryptoOrderFromApi(crypto: String): ApiResponseStatus<List<CryptoOrder>?> {
         return makeNetworkCall {
             val cryptoOrderApiResponse = retrofitService.getOrderCrypto(crypto)
-            val cryptoOrderDTOList = cryptoOrderApiResponse.payload.asks
+            val cryptoOrderDTOList = cryptoOrderApiResponse?.payload?.asks
             val cryptoOrderDTOMapper = CryptoOrderDTOMapper()
-            cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(cryptoOrderDTOList)
+            cryptoOrderDTOList?.let {
+                cryptoOrderDTOMapper.fromCryptoOrderDTOListToCryptoOrderDomainList(
+                    it
+                )
+            }
         }
     }
 
-    suspend fun getCryptoOrderFromDataBase(crypto: String): ApiResponseStatus<List<CryptoOrder>> {
+    suspend fun getCryptoOrderFromDataBase(crypto: String): ApiResponseStatus<List<CryptoOrder>?> {
         return makeNetworkCall {
             val cryptoListBDResponse = cryptoOrderDao.getCryptoOrder(crypto)
             val cryptoOrderDaoMapper = CryptoOrderDaoMapper()
@@ -39,12 +43,12 @@ class CryptoOrderRepository @Inject constructor(
         }
     }
 
-    suspend fun insertCryptoOrder(cryptoOrderList: List<CryptoOrderEntity>) {
-        cryptoOrderDao.insertCryptoOrder(cryptoOrderList)
+    suspend fun insertCryptoOrder(cryptoOrderList: List<CryptoOrderEntity>?) {
+        cryptoOrderList?.let { cryptoOrderDao.insertCryptoOrder(it) }
     }
 
-    suspend fun clearCryptoOrder() {
-        cryptoOrderDao.deleteCryptoOrder()
+    suspend fun clearCryptoOrder(crypto: String) {
+        cryptoOrderDao.deleteCryptoOrder(crypto)
     }
 
     /* Crypto Book Detail */
