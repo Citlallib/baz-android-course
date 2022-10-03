@@ -35,7 +35,7 @@ class CryptoListViewModelTest {
     fun onBefore() {
         MockKAnnotations.init(this)
         cryptoListViewModel = CryptoListViewModel(getCryptoListUseCase)
-        Dispatchers.setMain(Unconfined)
+        Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
     @After
@@ -46,24 +46,13 @@ class CryptoListViewModelTest {
     @Test
     fun `when download crypto`() = runTest {
         //GIVEN
-        val list: List<Crypto> = listOf(
-            Crypto(
-                book = "btc_mxn",
-                minimum_price = "381040",
-                maximum_price = "389880",
-                minimum_value = "381040",
-                maximum_value = "389880",
-                minimum_amount = "381040",
-                maximum_amount = "389880",
-                tick_size = "10"
-            )
-        )
+        val list: List<Crypto> = listOf(Crypto(book = "btc_mxn", minimum_price = "381040", maximum_price = "389880", minimum_value = "381040",
+                maximum_value = "389880", minimum_amount = "381040", maximum_amount = "389880", tick_size = "10" ) )
         val listApiResponseStatus: ApiResponseStatus<List<Crypto>> = ApiResponseStatus.Success(list)
         coEvery { getCryptoListUseCase() } returns listApiResponseStatus
         //WHEN
         cryptoListViewModel
         //THEN
-        assert(cryptoListViewModel.cryptoList.value == listApiResponseStatus)
-
+        assert(cryptoListViewModel.cryptoList.value == list)
     }
 }

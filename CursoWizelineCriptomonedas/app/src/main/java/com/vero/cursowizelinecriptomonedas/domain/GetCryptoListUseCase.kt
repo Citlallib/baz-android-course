@@ -1,7 +1,5 @@
 package com.vero.cursowizelinecriptomonedas.domain
 
-import android.util.Log
-import com.vero.cursowizelinecriptomonedas.R
 import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.cryptoList.CryptoRepository
 import com.vero.cursowizelinecriptomonedas.data.database.mapper.CryptoDaoMapper

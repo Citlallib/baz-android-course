@@ -15,7 +15,6 @@ class GetCryptoBookDetailUseCase @Inject constructor(
          val cryptoOrderDetailPayload = cryptoOrderRepository.getCryptoBookDetailFromApi(crypto)
 
         return if (cryptoOrderDetailPayload is ApiResponseStatus.Success){
-            Log.i("okhttp", "Entra por Api")
             cryptoOrderRepository.clearCryptoBookDetail(crypto)
             val cryptoOrder = cryptoOrderDetailPayload.data?.let {
                 CryptoBookDetailDaoMapper().fromCryptoOrderDomainToEntity(
@@ -25,7 +24,6 @@ class GetCryptoBookDetailUseCase @Inject constructor(
             cryptoOrderRepository.insertCryptoBookDetail(cryptoOrder)
             return cryptoOrderDetailPayload
         }else {
-            Log.i("okhttp", "Entra por DB")
             cryptoOrderRepository.getCryptoBookDetailFromDataBase(crypto)
         }
     }
