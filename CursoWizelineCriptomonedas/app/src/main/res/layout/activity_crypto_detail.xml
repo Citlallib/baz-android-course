@@ -7,217 +7,264 @@
 
         <variable
             name="crypto"
-            type="com.vero.cursowizelinecriptomonedas.model.Crypto" />
+            type="com.vero.cursowizelinecriptomonedas.data.model.Crypto" />
+
+        <variable
+            name="cryptoBook"
+            type="com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/secondary_background">
 
-        <ScrollView
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/detail_info_background"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
+            <TextView
+                android:id="@+id/crypto_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="8dp"
+                android:textColor="@color/text_black"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="#1" />
+
+            <TextView
+                android:id="@+id/crypto_book"
+                style="@style/TitleBookDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:padding="8dp"
+                android:text="@{crypto.book}"
+                app:layout_constraintEnd_toEndOf="@+id/crypto_index"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="MXN" />
+
+            <!-- Starts Dividers -->
+            <View
+                android:id="@+id/vw_first_line_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="1dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/crypto_book" />
 
-                <ImageView
-                    android:id="@+id/crypto_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/image"
-                    android:elevation="8dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_vertical_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".33" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/detail_info_background"
-                    android:elevation="4dp"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp">
+            <View
+                android:id="@+id/vw_first_line_vertical"
+                android:layout_width="1dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/divider"
+                app:layout_constraintBottom_toBottomOf="@id/vw_second_line_horizontal"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_one"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_one"
+                app:layout_constraintTop_toTopOf="@id/vw_first_line_horizontal" />
 
-                    <TextView
-                        android:id="@+id/crypto_index"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:padding="8dp"
-                        android:textColor="@color/text_black"
-                        android:textSize="24sp"
-                        tools:text="#1" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_vertical_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".66" />
 
-                    <TextView
-                        android:id="@+id/crypto_book"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="@{crypto.book}"
-                        android:textColor="@color/text_black"
-                        android:textSize="32sp"
-                        tools:text="MXN" />
+            <View
+                android:id="@+id/vw_second_line_vertical"
+                android:layout_width="1dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/divider"
+                app:layout_constraintBottom_toBottomOf="@id/vw_second_line_horizontal"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_two"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_two"
+                app:layout_constraintTop_toTopOf="@id/vw_first_line_horizontal" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
+            <View
+                android:id="@+id/vw_second_line_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/maximum_price" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+            <!-- End Dividers -->
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title_minimum_price"
+                style="@style/DetailSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/minimum_price"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_one"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vw_first_line_horizontal" />
 
-                            <TextView
-                                style="@style/DetailSection"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/minimum_price" />
+            <TextView
+                android:id="@+id/minimum_price"
+                style="@style/DetailSectionInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{cryptoBook.payload.low}"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_one"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_minimum_price"
+                tools:text="10.00000000" />
 
-                            <TextView
-                                android:id="@+id/minimum_price"
-                                style="@style/DetailSectionInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@{crypto.minimum_price}"
-                                tools:text="10.00000000" />
+            <TextView
+                android:id="@+id/tv_title_maximum_price"
+                style="@style/DetailSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/maximum_price"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_one"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/minimum_price" />
 
-                            <TextView
-                                style="@style/DetailSection"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="@string/maximum_price" />
+            <TextView
+                android:id="@+id/maximum_price"
+                style="@style/DetailSectionInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{cryptoBook.payload.high}"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_one"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_maximum_price"
+                tools:text="20.00000000" />
 
-                            <TextView
-                                android:id="@+id/maximum_price"
-                                style="@style/DetailSectionInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@{crypto.maximum_price}"
-                                tools:text="20.00000000" />
-                        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_title_last_price"
+                style="@style/DetailSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_price"
+                app:layout_constraintBottom_toTopOf="@id/last_price"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_two"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_one"
+                app:layout_constraintTop_toTopOf="@id/vw_first_line_vertical" />
 
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:background="@color/divider" />
+            <TextView
+                android:id="@+id/last_price"
+                style="@style/DetailSectionInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{cryptoBook.payload.last}"
+                app:layout_constraintBottom_toBottomOf="@id/vw_second_line_vertical"
+                app:layout_constraintEnd_toEndOf="@id/gl_vertical_two"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_one"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_last_price"
+                tools:text="20" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title_minimum_value"
+                style="@style/DetailSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minimum_value"
+                app:layout_constraintBottom_toBottomOf="@id/tv_title_minimum_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_two"
+                app:layout_constraintTop_toTopOf="@id/tv_title_minimum_price" />
 
-                            <TextView
-                                style="@style/DetailSection"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/tick_size" />
+            <TextView
+                android:id="@+id/minimum_value"
+                style="@style/DetailSectionInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{crypto.minimum_value}"
+                app:layout_constraintBottom_toBottomOf="@id/minimum_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_two"
+                app:layout_constraintTop_toTopOf="@id/minimum_price"
+                tools:text="11.00000000" />
 
-                            <TextView
-                                android:id="@+id/ticket_size"
-                                style="@style/DetailSectionInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@{crypto.tick_size}"
-                                tools:text="20" />
-                        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_title_maximum_value"
+                style="@style/DetailSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maximum_value"
+                app:layout_constraintBottom_toBottomOf="@id/tv_title_maximum_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_two"
+                app:layout_constraintTop_toTopOf="@id/tv_title_maximum_price" />
 
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:background="@color/divider" />
+            <TextView
+                android:id="@+id/maximum_value"
+                style="@style/DetailSectionInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{crypto.maximum_value}"
+                app:layout_constraintBottom_toBottomOf="@id/maximum_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_vertical_two"
+                app:layout_constraintTop_toTopOf="@id/maximum_price"
+                tools:text="12.000000000" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/crypto_order_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vw_second_line_horizontal"
+                tools:context=".cryptoDetail.CryptoOrderDetailActivity" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/minimum_value"
-                                android:textColor="@color/text_black" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <TextView
-                                android:id="@+id/minimum_value"
-                                style="@style/DetailSectionInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@{crypto.minimum_value}"
-                                tools:text="11.00000000" />
+        <ImageView
+            android:id="@+id/crypto_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/image"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/linearLayout"
+            tools:srcCompat="@tools:sample/avatars" />
 
-                            <TextView
-                                style="@style/DetailSection"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/maximum_value" />
-
-                            <TextView
-                                android:id="@+id/maximum_value"
-                                style="@style/DetailSectionInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@{crypto.maximum_value}"
-                                tools:text="12.000000000" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/crypto_order_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        tools:context=".cryptoDetail.CryptoOrderDetailActivity" />
-                </LinearLayout>
-            </FrameLayout>
-        </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/close_button"
@@ -227,7 +274,9 @@
             android:backgroundTint="@color/colorPrimaryDark"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_back"
-            app:fabCustomSize="40dp" />
+            app:fabCustomSize="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/loading_wheel"
@@ -237,7 +286,12 @@
             android:indeterminate="true"
             android:indeterminateTint="@color/colorPrimaryDark"
             android:indeterminateTintMode="src_atop"
-            android:visibility="gone" />
-    </FrameLayout>
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

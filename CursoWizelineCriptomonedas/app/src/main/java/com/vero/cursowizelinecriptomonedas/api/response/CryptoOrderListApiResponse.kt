@@ -1,6 +1,6 @@
 package com.vero.cursowizelinecriptomonedas.api.response
 
-import com.vero.cursowizelinecriptomonedas.model.CryptoOrderPayload
+import com.vero.cursowizelinecriptomonedas.data.model.CryptoOrderPayload
 
 data class CryptoOrderListApiResponse(
     val payload: CryptoOrderPayload,
