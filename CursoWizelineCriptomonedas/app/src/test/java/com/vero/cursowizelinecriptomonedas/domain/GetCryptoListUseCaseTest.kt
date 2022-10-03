@@ -1,7 +1,6 @@
 package com.vero.cursowizelinecriptomonedas.domain
 
-
-import com.vero.cursowizelinecriptomonedas.api.makeNetworkCall
+import com.vero.cursowizelinecriptomonedas.api.ApiResponseStatus
 import com.vero.cursowizelinecriptomonedas.cryptoList.CryptoRepository
 import com.vero.cursowizelinecriptomonedas.data.model.Crypto
 import io.mockk.MockKAnnotations
@@ -26,22 +25,17 @@ class GetCryptoListUseCaseTest {
     }
 
     @Test
-    fun `test prueba`(){
-        assert(2+2==4)
-    }
-
-    /**@Test
     fun `When the API return anything then get values from de Data base`() = runBlocking {
         //GIVEN
-        val lista: List<Crypto> = listOf()
-        coEvery { cryptoRepository.downloadCrypto() } returns makeNetworkCall { lista }
+        val listApiResponseStatus: ApiResponseStatus<List<Crypto>> = ApiResponseStatus.Error(204)
+        coEvery { cryptoRepository.downloadCrypto() } returns listApiResponseStatus
         //WHEN
         getCryptoListUseCase()
         //THEN
         coVerify(exactly = 1) { cryptoRepository.downloadCryptoFromDataBase() }
-    }*/
+    }
 
-    /**@Test
+    @Test
     fun `When the API return something then get value from api`() = runBlocking {
         //GIVEN
         val list: List<Crypto> = listOf(
@@ -56,13 +50,14 @@ class GetCryptoListUseCaseTest {
                 tick_size = "10"
             )
         )
-        coEvery { cryptoRepository.downloadCrypto() } returns makeNetworkCall { list }
+        val listApiResponseStatus: ApiResponseStatus<List<Crypto>> = ApiResponseStatus.Success(list)
+        coEvery { cryptoRepository.downloadCrypto() } returns listApiResponseStatus
         //WHEN
         val response = getCryptoListUseCase()
         //THEN
-        coVerify(exactly = 1) { cryptoRepository.clearCrypto() }
-        coVerify { cryptoRepository.insertCrypto(any()) }
         coVerify(exactly = 0) { cryptoRepository.downloadCryptoFromDataBase() }
-        assert(list == response)
-    }*/
+        coVerify(exactly = 1) { cryptoRepository.clearCrypto() }
+        coVerify(exactly = 1) { cryptoRepository.insertCrypto(any()) }
+        assert(listApiResponseStatus == response)
+    }
 }

@@ -14,7 +14,6 @@ class GetCryptoListUseCase @Inject constructor(
     suspend operator fun invoke(): ApiResponseStatus<List<Crypto>> {
         val cryptos = repository.downloadCrypto()
         return if (cryptos is ApiResponseStatus.Success) {
-            Log.i("okhttp", "Entra por Api")
             repository.clearCrypto()
             val cryptosMap = CryptoDaoMapper().fromCryptoDomainListToCryptoEntityList(
                 cryptos.data
@@ -24,7 +23,6 @@ class GetCryptoListUseCase @Inject constructor(
             )
             return cryptos
         } else {
-            Log.i("okhttp", "Entra por DB")
             repository.downloadCryptoFromDataBase()
         }
     }
