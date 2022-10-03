@@ -3,11 +3,8 @@ package com.vero.cursowizelinecriptomonedas.api
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoListApiResponse
 import com.vero.cursowizelinecriptomonedas.api.response.CryptoOrderListApiResponse
 import com.vero.cursowizelinecriptomonedas.data.model.CryptoBookDetail
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
-import io.reactivex.rxjava3.core.Single
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -21,13 +18,13 @@ private val loggingInterceptor: HttpLoggingInterceptor
 private val okHttpClient = OkHttpClient
     .Builder()
     .addInterceptor(loggingInterceptor)
+    .addInterceptor(UserAgentInterceptor())
     .build()
 
 private val retrofit = Retrofit.Builder()
     .client(okHttpClient)
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .build()
 
 interface ApiService {
